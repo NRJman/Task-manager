@@ -1,14 +1,151 @@
-// Не забутись написати нормальний інтерфейс/реалізацію
-
 function TaskList(){
 	this._originalList = [];
 	this._listForNameSorting = [];
 	this._listForNumberSorting = [];
 	this._outputList = [];
-	this._sortByNameFlag = false; // Checks if my list is sorted by name or not.
-	this._sortByNumberFlag = false; // Checks if my list is sorted by number or not.
-	this._reverseFlag = false; // Checks if the _originalList is reversed.
-	this._attributeFlag = false; // Checks if the list is even or odd.
+	this._sortByNameFlag = false; // Checks if my list is sorted by name or not
+	this._sortByNumberFlag = false; // Checks if my list is sorted by number or not
+	this._reverseFlag = false; // Checks if the _originalList is reversed
+	this._attributeFlag = false; // Checks if the list is even or odd
+}
+
+TaskList.prototype._addTask = function(){
+	while (true){
+		var taskName = prompt("Please, write your task.", "Task name");
+		if (this.getOriginalList().indexOf(taskName) != -1){
+			alert("Please, finish your previous such task.");
+			continue;
+		} else {
+			break;
+		}
+	}
+
+	if (taskName !== null){
+		this._pushElement(taskName);
+		this.setOriginalList(this.getOriginalList());
+		this.setOutputList(this.getOriginalList());
+	} else {
+		return;
+	}
+}
+
+TaskList.prototype._removeTask = function(){
+	while (true){
+		var taskNumber = Math.round(+prompt("Please, write a task number.", 1));
+        if (!isNaN(parseFloat(taskNumber)) && isFinite(taskNumber) && (0 < taskNumber) && (taskNumber <= this.getOriginalList().length)){
+            break;
+        } else {
+        	if (taskNumber === 0){
+        		return;
+        	}
+
+        	alert("There is not any tasks with this number.");
+        	continue;
+        }
+}
+
+//for correct deleting items from inversed (by number) list
+	if (this.getSortByNumberFlag()){
+		this._reverseList();
+		this.setOriginalList(this.getOriginalList());
+		this._spliceList(taskNumber);
+		this.setOriginalList(this.getOriginalList());
+		this.setOutputList(this.getOriginalList());
+		this._reverseList();
+		this.setOriginalList(this.getOriginalList());
+	} else {
+		this._spliceList(taskNumber);
+		this.setOriginalList(this.getOriginalList());
+		this.setOutputList(this.getOriginalList());
+	}
+}
+
+TaskList.prototype._sortListByNameAsc = function(){
+	this.setListForNameSorting(this.getOriginalList());
+	this._sortListForNameSorting();
+	return this.getListForNameSorting();
+}
+
+TaskList.prototype._sortListByNameDesc = function(){
+	this.setListForNameSorting(this.getOriginalList());
+	this._sortListForNameSorting();
+	this._reverseListForNameSorting();
+	return this.getListForNameSorting();
+}
+
+TaskList.prototype._sortListByNumber = function(){
+	this.setListForNumberSorting(this.getOriginalList());
+	this._reverseListForNumberSorting();
+	this.setListForNumberSorting(this.getListForNumberSorting());
+	return this.getListForNumberSorting();
+}
+
+TaskList.prototype.updateList = function(n){
+	var myTasks = document.getElementsByClassName("taskManager__list")[0];
+	while(myTasks.firstChild){
+		myTasks.removeChild(myTasks.firstChild);
+	}
+
+	switch(n){
+		case 1:
+			this._addTask();
+			break;
+		case 2:
+			this._removeTask();
+			break;
+		case 3:
+			this.setOutputList(this._sortListByNumber())
+
+			//Set sortByNameFlag
+			if (this.getSortByNameFlag()){
+				this.setSortByNameFlag(false);
+			}
+			//Set sortByNumberFlag
+			if (!this.getSortByNumberFlag()){
+				this.setSortByNumberFlag(true);
+			} else if (this.getSortByNumberFlag()){
+				this.setSortByNumberFlag(false)
+			}
+			break;
+		case 4:
+			//For a choosing of a sort method
+			if (!this.getSortByNameFlag()){
+				this.setOutputList(this._sortListByNameAsc())
+				this.setSortByNameFlag(true);
+			} else if (this.getSortByNameFlag()){
+				this.setOutputList(this._sortListByNameDesc());
+				this.setSortByNameFlag(false);
+			}
+			break;
+	}
+
+	if (this.getAttributeFlag()){
+		this.setAttributeFlag(false);
+	}
+
+	for (var i = 0; i < this.getOutputList().length; i++){
+		var task = document.createElement("LI");
+		if (!this.getAttributeFlag()){
+			task.setAttribute("class", "taskManager__list-odd");
+			this.setAttributeFlag(true);
+		} else {
+			task.setAttribute("class", "taskManager__list-even");
+			this.setAttributeFlag(false);
+		}
+		var text = document.createTextNode(this.getOutputList()[i]);
+		task.appendChild(text);
+		myTasks.appendChild(task);
+	}
+
+	if (this.getSortByNumberFlag()){
+		var newValue = myTasks.childNodes.length;
+		for (var i = 0; i < myTasks.childNodes.length; i++){
+			myTasks.childNodes[i].setAttribute("value", newValue);
+			newValue--;
+		}
+	}
+
+	console.log(this.getOutputList());
 }
 
 TaskList.prototype.getOriginalList = function(){
@@ -97,145 +234,6 @@ TaskList.prototype._reverseListForNameSorting = function(){
 
 TaskList.prototype._reverseListForNumberSorting = function(){
 	this._listForNumberSorting.reverse();
-}
-
-TaskList.prototype._addTask = function(){
-	while (true){
-		var taskName = prompt("Please, write your task.", "Task name");
-		if (this.getOriginalList().indexOf(taskName) != -1){
-			alert("Please, finish your previous such task.");
-			continue;
-		} else {
-			break;
-		}
-	}
-
-	if (taskName !== null){
-		this._pushElement(taskName);
-		this.setOriginalList(this.getOriginalList());
-		this.setOutputList(this.getOriginalList());
-	} else {
-		return;
-	}
-}
-
-TaskList.prototype._removeTask = function(){
-	while (true){
-		var taskNumber = Math.round(+prompt("Please, write a task number.", 1));
-        if (!isNaN(parseFloat(taskNumber)) && isFinite(taskNumber) && (0 < taskNumber) && (taskNumber <= this.getOriginalList().length)){
-            break;
-        } else {
-        	if (taskNumber === 0){
-        		return;
-        	}
-
-        	alert("There is not any tasks with this number.");
-        	continue;
-        }
-}	
-//for correct deleting items from inverse (by number) list
-	if (this.getSortByNumberFlag()){
-		this._reverseList();
-		this.setOriginalList(this.getOriginalList());
-		this._spliceList(taskNumber);
-		this.setOriginalList(this.getOriginalList());
-		this.setOutputList(this.getOriginalList());
-		this._reverseList();
-		this.setOriginalList(this.getOriginalList());
-	} else {
-		this._spliceList(taskNumber);
-		this.setOriginalList(this.getOriginalList());
-		this.setOutputList(this.getOriginalList());
-	}
-}
-
-TaskList.prototype._sortListByNameAsc = function(){
-	this.setListForNameSorting(this.getOriginalList());
-	this._sortListForNameSorting();
-	return this.getListForNameSorting();
-}
-
-TaskList.prototype._sortListByNameDesc = function(){
-	this.setListForNameSorting(this.getOriginalList());
-	this._sortListForNameSorting();
-	this._reverseListForNameSorting();
-	return this.getListForNameSorting();
-}
-
-TaskList.prototype._sortListByNumber = function(){
-	this.setListForNumberSorting(this.getOriginalList());
-	this._reverseListForNumberSorting();
-	this.setListForNumberSorting(this.getListForNumberSorting());
-	return this.getListForNumberSorting();
-}
-
-TaskList.prototype.updateList = function(n){
-	var myTasks = document.getElementsByClassName("taskManager__list")[0];
-	while(myTasks.firstChild){
-		myTasks.removeChild(myTasks.firstChild);
-	}
-
-	switch(n){
-		case 1:
-			this._addTask();
-			break;
-		case 2:
-			this._removeTask();
-			break;
-		case 3:
-			this.setOutputList(this._sortListByNumber())
-
-			//Set sortByNameFlag
-			if (this.getSortByNameFlag()){
-				this.setSortByNameFlag(false);
-			}
-			//Set sortByNumberFlag
-			if (!this.getSortByNumberFlag()){
-				this.setSortByNumberFlag(true);
-			} else if (this.getSortByNumberFlag()){
-				this.setSortByNumberFlag(false)
-			}
-			break;
-		case 4:
-			//For a choosing sort method.
-
-			if (!this.getSortByNameFlag()){
-				this.setOutputList(this._sortListByNameAsc())
-				this.setSortByNameFlag(true);
-			} else if (this.getSortByNameFlag()){
-				this.setOutputList(this._sortListByNameDesc());
-				this.setSortByNameFlag(false);
-			}
-			break;
-	}
-
-	if (this.getAttributeFlag()){
-		this.setAttributeFlag(false);
-	}
-
-	for (var i = 0; i < this.getOutputList().length; i++){
-		var task = document.createElement("LI");
-		if (!this.getAttributeFlag()){
-			task.setAttribute("class", "taskManager__list-odd");
-			this.setAttributeFlag(true);
-		} else {
-			task.setAttribute("class", "taskManager__list-even");
-			this.setAttributeFlag(false);
-		}
-		var text = document.createTextNode(this.getOutputList()[i]);
-		task.appendChild(text);
-		myTasks.appendChild(task);
-	}
-
-	if (this.getSortByNumberFlag()){
-		var newValue = myTasks.childNodes.length;
-		for (var i = 0; i < myTasks.childNodes.length; i++){
-			myTasks.childNodes[i].setAttribute("value", newValue);
-			newValue--;
-		}
-	}
-
-	console.log(this.getOutputList());
 }
 
 var taskList = new TaskList;
