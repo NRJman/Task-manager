@@ -43,8 +43,6 @@ TaskList.prototype.getAttributeFlag = function(){
 	return this._attributeFlag;
 }
 
-//------------------
-
 TaskList.prototype.setOriginalList = function(list){
 	this._originalList = list;
 }
@@ -134,8 +132,8 @@ TaskList.prototype._removeTask = function(){
         	alert("There is not any tasks with this number.");
         	continue;
         }
-	}	
-//для коректного видалення елементів при інверсному (за номером) списку
+}	
+//for correct deleting items from inverse (by number) list
 	if (this.getSortByNumberFlag()){
 		this._reverseList();
 		this.setOriginalList(this.getOriginalList());
