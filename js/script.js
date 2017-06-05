@@ -7,11 +7,14 @@ function TaskList(){
 	this._sortByNumberFlag = false; // Checks if my list is sorted by number or not
 	this._reverseFlag = false; // Checks if the _originalList is reversed
 	this._attributeFlag = false; // Checks if the list is even or odd
+	this._taskName = "Task name"; // Sets the primary task name
+	this._taskNameCounter = 1; // Counts the task names
 }
 
 TaskList.prototype._addTask = function(){
 	while (true){
-		var taskName = prompt("Please, write your task.", "Task name");
+		var taskName = prompt("Please, write your task.", this.getTaskName() + ' ' + this.getTaskNameCounter());
+		this.incTaskNameCounter();
 		if (this.getOriginalList().indexOf(taskName) != -1){
 			alert("Please, finish your previous such task.");
 			continue;
@@ -39,7 +42,7 @@ TaskList.prototype._removeTask = function(){
         		return;
         	}
 
-        	alert("There is not any tasks with this number.");
+        	alert("There are no any tasks with this number.");
         	continue;
         }
 }
@@ -180,6 +183,14 @@ TaskList.prototype.getAttributeFlag = function(){
 	return this._attributeFlag;
 }
 
+TaskList.prototype.getTaskName = function(){
+	return this._taskName;
+}
+
+TaskList.prototype.getTaskNameCounter = function(){
+	return this._taskNameCounter;
+}
+
 TaskList.prototype.setOriginalList = function(list){
 	this._originalList = list;
 }
@@ -210,6 +221,10 @@ TaskList.prototype.setReverseFlag = function(flag){
 
 TaskList.prototype.setAttributeFlag = function(flag){
 	this._attributeFlag = flag;
+}
+
+TaskList.prototype.incTaskNameCounter = function(){
+	this._taskNameCounter++;
 }
 
 TaskList.prototype._pushElement = function(element){
