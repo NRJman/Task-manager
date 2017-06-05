@@ -14,7 +14,6 @@ function TaskList(){
 TaskList.prototype._addTask = function(){
 	while (true){
 		var taskName = prompt("Please, write your task.", this.getTaskName() + ' ' + this.getTaskNameCounter());
-		this.incTaskNameCounter();
 		if (this.getOriginalList().indexOf(taskName) != -1){
 			alert("Please, finish your previous such task.");
 			continue;
@@ -27,6 +26,7 @@ TaskList.prototype._addTask = function(){
 		this._pushElement(taskName);
 		this.setOriginalList(this.getOriginalList());
 		this.setOutputList(this.getOriginalList());
+		this.incTaskNameCounter();
 	} else {
 		return;
 	}
