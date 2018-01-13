@@ -4,7 +4,7 @@ It's a **"Task manager"** web application. You can add new tasks, sort by name a
 
 ## Motivation
 
-It wasn't important for me to create great UI, when I did this job. My main goal was to sharpen my **OOP** skill in **JavaScript** language. Take a look at code to check this out,
+It wasn't important for me to create great UI, when I did this task. My main goal was to sharpen my **OOP** skills in **JavaScript** language. Take a look at the code to check this out,
 
 ## Running
 
